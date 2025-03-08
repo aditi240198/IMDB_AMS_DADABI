@@ -26,11 +26,23 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_TitleRatings",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sf_TitleRatingsStg",
 						"type": "DatasetReference"
 					}
 				]
