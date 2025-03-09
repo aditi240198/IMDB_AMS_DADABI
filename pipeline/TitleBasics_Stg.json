@@ -1,0 +1,151 @@
+{
+	"name": "TitleBasics_Stg",
+	"properties": {
+		"activities": [
+			{
+				"name": "TitleBasics_Stg",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.00:30:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "blobams",
+							"type": "LinkedServiceReference"
+						},
+						"path": "silver"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "tconst",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TCONST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "titleType",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TITLETYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "primaryTitle",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PRIMARYTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "originalTitle",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ORIGINALTITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "isAdult",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ISADULT",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "startYear",
+									"type": "String"
+								},
+								"sink": {
+									"name": "STARTYEAR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "endYear",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ENDYEAR",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "RUNTIME_MINUTES",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "genres",
+									"type": "String"
+								},
+								"sink": {
+									"name": "GENRES",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_TitleBasicsStg",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "snowflake_TitleBasicsStg",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
