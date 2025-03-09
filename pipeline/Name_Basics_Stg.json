@@ -5,8 +5,6 @@
 			{
 				"name": "NameBasicsStg",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.00:30:00",
@@ -41,6 +39,71 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "silver"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "nconst",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NCONST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "primaryName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PRIMARYNAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "birthYear",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BIRTHYEAR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "deathYear",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DEATHYEAR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "primaryProfession",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PRIMARYPROFESSION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "knownForTitles",
+									"type": "String"
+								},
+								"sink": {
+									"name": "KNOWNFORTITLES",
+									"type": "String"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [
