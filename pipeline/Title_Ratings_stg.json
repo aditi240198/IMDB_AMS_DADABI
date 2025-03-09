@@ -35,14 +35,14 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "blobstorageams",
+							"referenceName": "blobstoragespring2025",
 							"type": "LinkedServiceReference"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_TitleRatingscsv",
+						"referenceName": "ds_TitleRatings",
 						"type": "DatasetReference"
 					}
 				],
