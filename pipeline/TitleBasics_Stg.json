@@ -114,6 +114,10 @@
 								}
 							},
 							{
+								"source": {
+									"name": "runtimeMinutes",
+									"type": "String"
+								},
 								"sink": {
 									"name": "RUNTIME_MINUTES",
 									"type": "String"
