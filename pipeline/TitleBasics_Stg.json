@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "TitleBasics_Stg",
+				"name": "StgTitleBasics",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
+							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -35,116 +35,21 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "blobams",
+							"referenceName": "linkedService1",
 							"type": "LinkedServiceReference"
 						},
 						"path": "silver"
-					},
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "tconst",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TCONST",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "titleType",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TITLETYPE",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "primaryTitle",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PRIMARYTITLE",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "originalTitle",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ORIGINALTITLE",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "isAdult",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ISADULT",
-									"type": "Int64"
-								}
-							},
-							{
-								"source": {
-									"name": "startYear",
-									"type": "String"
-								},
-								"sink": {
-									"name": "STARTYEAR",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "endYear",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ENDYEAR",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "runtimeMinutes",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RUNTIME_MINUTES",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "genres",
-									"type": "String"
-								},
-								"sink": {
-									"name": "GENRES",
-									"type": "String"
-								}
-							}
-						]
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_TitleBasicsStg",
+						"referenceName": "dsTitleBasics",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "snowflake_TitleBasicsStg",
+						"referenceName": "SnowflakeTable_titlebasics",
 						"type": "DatasetReference"
 					}
 				]
