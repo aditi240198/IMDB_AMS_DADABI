@@ -32,7 +32,14 @@
 							"type": "SnowflakeImportCopyCommand"
 						}
 					},
-					"enableStaging": true
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "adlsAMS",
+							"type": "LinkedServiceReference"
+						},
+						"path": "silver"
+					}
 				},
 				"inputs": [
 					{
