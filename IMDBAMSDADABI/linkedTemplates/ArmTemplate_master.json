@@ -1,0 +1,105 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "IMDBAMSDADABI"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"adlsAMS_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adlsAMS'"
+		},
+		"db_ams_imdb_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'db_ams_imdb'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://spring25damg.dfs.core.windows.net/"
+		},
+		"AzureKeyVault_IMDB_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://spring25kvdamg.vault.azure.net/"
+		},
+		"adlsAMS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://amsadls.dfs.core.windows.net/"
+		},
+		"blobstorageams_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'blobstorageams'"
+		},
+		"db_ams_imdb_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "MOVIE_DB"
+		},
+		"blobstoragespring2025_sasUri": {
+			"type": "secureString",
+			"metadata": "Secure string for 'sasUri' of 'blobstoragespring2025'"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "IMDBAMSDADABI_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"adlsAMS_accountKey": {
+						"value": "[parameters('adlsAMS_accountKey')]"
+					},
+					"db_ams_imdb_password": {
+						"value": "[parameters('db_ams_imdb_password')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"AzureKeyVault_IMDB_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault_IMDB_properties_typeProperties_baseUrl')]"
+					},
+					"adlsAMS_properties_typeProperties_url": {
+						"value": "[parameters('adlsAMS_properties_typeProperties_url')]"
+					},
+					"blobstorageams_sasUri": {
+						"value": "[parameters('blobstorageams_sasUri')]"
+					},
+					"db_ams_imdb_properties_typeProperties_database": {
+						"value": "[parameters('db_ams_imdb_properties_typeProperties_database')]"
+					},
+					"blobstoragespring2025_sasUri": {
+						"value": "[parameters('blobstoragespring2025_sasUri')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

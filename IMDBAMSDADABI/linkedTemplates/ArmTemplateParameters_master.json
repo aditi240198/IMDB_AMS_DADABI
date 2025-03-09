@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "IMDBAMSDADABI"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"adlsAMS_accountKey": {
+			"value": ""
+		},
+		"db_ams_imdb_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://spring25damg.dfs.core.windows.net/"
+		},
+		"AzureKeyVault_IMDB_properties_typeProperties_baseUrl": {
+			"value": "https://spring25kvdamg.vault.azure.net/"
+		},
+		"adlsAMS_properties_typeProperties_url": {
+			"value": "https://amsadls.dfs.core.windows.net/"
+		},
+		"blobstorageams_sasUri": {
+			"value": ""
+		},
+		"db_ams_imdb_properties_typeProperties_database": {
+			"value": "MOVIE_DB"
+		},
+		"blobstoragespring2025_sasUri": {
+			"value": ""
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
