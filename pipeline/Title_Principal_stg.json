@@ -43,13 +43,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText2",
+						"referenceName": "DelimitedText3",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SnowflakeTable_Principal",
+						"referenceName": "Princ_SnowflakeTable",
 						"type": "DatasetReference"
 					}
 				]
