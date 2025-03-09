@@ -1,0 +1,86 @@
+{
+	"name": "df_title_basic_flatten_stg",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable_titlebasics",
+						"type": "DatasetReference"
+					},
+					"name": "FlattenTitleBasicStg"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable_titlebasics",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as string,",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIME_MINUTES as string,",
+				"          GENRES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> FlattenTitleBasicStg",
+				"FlattenTitleBasicStg derive(GENRES = split(GENRES,',')) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unroll(GENRES),",
+				"     mapColumn(",
+				"          TCONST,",
+				"          TITLETYPE,",
+				"          PRIMARYTITLE,",
+				"          ORIGINALTITLE,",
+				"          ISADULT,",
+				"          STARTYEAR,",
+				"          ENDYEAR,",
+				"          RUNTIME_MINUTES,",
+				"          GENRES",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as decimal(38,0),",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIME_MINUTES as string,",
+				"          GENRES as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true) ~> sink1"
+			]
+		}
+	}
+}
