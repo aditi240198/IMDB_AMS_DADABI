@@ -37,7 +37,8 @@
 						"linkedServiceName": {
 							"referenceName": "blobstorageams",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"path": "stagebronze"
 					},
 					"translator": {
 						"type": "TabularTranslator",
