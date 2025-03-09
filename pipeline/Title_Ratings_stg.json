@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
+							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -37,48 +37,12 @@
 						"linkedServiceName": {
 							"referenceName": "blobstorageams",
 							"type": "LinkedServiceReference"
-						},
-						"path": "stagebronze"
-					},
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "tconst",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TCONST",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "averageRating",
-									"type": "String"
-								},
-								"sink": {
-									"name": "AVERAGERATING",
-									"type": "Double"
-								}
-							},
-							{
-								"source": {
-									"name": "numVotes",
-									"type": "String"
-								},
-								"sink": {
-									"name": "NUMVOTES",
-									"type": "Int64"
-								}
-							}
-						]
+						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_TitleRatings",
+						"referenceName": "ds_TitleRatingscsv",
 						"type": "DatasetReference"
 					}
 				],
@@ -90,6 +54,8 @@
 				]
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2025-03-09T00:50:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

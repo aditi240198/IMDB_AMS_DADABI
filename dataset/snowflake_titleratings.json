@@ -27,5 +27,6 @@
 			"schema": "MOVIE_SCHEMA",
 			"table": "STG_TITLE_RATINGS"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
