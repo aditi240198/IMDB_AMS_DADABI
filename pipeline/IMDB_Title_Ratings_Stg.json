@@ -35,10 +35,10 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "adlsAMS",
+							"referenceName": "blobstorageams",
 							"type": "LinkedServiceReference"
 						},
-						"path": "silver"
+						"path": ""
 					}
 				},
 				"inputs": [
