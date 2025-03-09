@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "DfStagingTitleBasics",
-				"type": "ExecuteDataFlow",
+				"name": "StgTitleBasics",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.00:30:00",
@@ -15,16 +15,44 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "dfTitleBasicsStg",
-						"type": "DataFlowReference"
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"sink": {
+						"type": "SnowflakeV2Sink",
+						"importSettings": {
+							"type": "SnowflakeImportCopyCommand"
+						}
 					},
-					"traceLevel": "Fine"
-				}
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "linkedService1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "silver"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dsTitleBasics",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SnowflakeTable_titlebasics",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
