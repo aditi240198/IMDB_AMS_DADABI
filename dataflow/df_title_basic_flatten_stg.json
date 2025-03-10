@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTable_titlebasics",
+						"referenceName": "SnowflakeTITLEBASICNEW",
 						"type": "DatasetReference"
 					},
 					"name": "FlattenTitleBasicStg"
