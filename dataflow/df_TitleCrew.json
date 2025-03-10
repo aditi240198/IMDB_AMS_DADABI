@@ -3,8 +3,24 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "snowflake_TitleCrewStg",
+						"type": "DatasetReference"
+					},
+					"name": "TitleCrewStg"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "snowflake_TitleCrewStg",
+						"type": "DatasetReference"
+					},
+					"name": "FlattenTitleCrewStg"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumnDirectorsWriters"
@@ -17,24 +33,52 @@
 				}
 			],
 			"scriptLines": [
-				" derive(directors = split(directors,','),",
-				"          writers = split(writers,',')) ~> derivedColumnDirectorsWriters",
-				"derivedColumnDirectorsWriters foldDown(unroll(directors),",
+				"source(output(",
+				"          TCONST as string,",
+				"          DIRECTORS as string,",
+				"          WRITERS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> TitleCrewStg",
+				"TitleCrewStg derive(DIRECTORS = split(DIRECTORS,','),",
+				"          WRITERS = split(WRITERS,',')) ~> derivedColumnDirectorsWriters",
+				"derivedColumnDirectorsWriters foldDown(unroll(DIRECTORS),",
 				"     mapColumn(",
-				"          tconst,",
-				"          directors,",
-				"          writers",
+				"          TCONST,",
+				"          DIRECTORS,",
+				"          WRITERS",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flattenDirectors",
-				"flattenDirectors foldDown(unroll(writers),",
+				"flattenDirectors foldDown(unroll(WRITERS),",
 				"     mapColumn(",
-				"          tconst,",
-				"          directors,",
-				"          writers",
+				"          TCONST,",
+				"          DIRECTORS,",
+				"          WRITERS",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flattenWriters"
+				"     skipDuplicateMapOutputs: false) ~> flattenWriters",
+				"flattenWriters sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TCONST as string,",
+				"          DIRECTORS as string,",
+				"          WRITERS as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TCONST,",
+				"          DIRECTORS,",
+				"          WRITERS",
+				"     )) ~> FlattenTitleCrewStg"
 			]
 		}
 	}
