@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "Df_Title_Basics_Flatten",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
