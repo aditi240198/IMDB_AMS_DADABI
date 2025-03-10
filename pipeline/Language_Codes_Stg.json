@@ -19,6 +19,19 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "DI_JOB_ID",
+								"value": "7"
+							},
+							{
+								"name": "DI_LOAD_DT",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
@@ -41,6 +54,71 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "silver"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ISO Language Names",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ISO_LANGUAGE_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Set 1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SET_1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Set 2T",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SET_2T",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Set 2B",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SET_2B",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DI_JOB_ID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DI_JOB_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "DI_LOAD_DT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DI_LOAD_DT",
+									"type": "DateTime"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [
