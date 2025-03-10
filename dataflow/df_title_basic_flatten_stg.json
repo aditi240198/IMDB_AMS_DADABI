@@ -26,7 +26,7 @@
 					"name": "derivedColumn1"
 				},
 				{
-					"name": "flatten1"
+					"name": "flattenGenre"
 				}
 			],
 			"scriptLines": [
@@ -62,8 +62,8 @@
 				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: false) ~> flattenGenre",
+				"flattenGenre sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          TCONST as string,",
@@ -82,6 +82,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
