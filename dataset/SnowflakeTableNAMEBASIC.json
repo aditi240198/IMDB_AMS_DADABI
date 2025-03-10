@@ -45,7 +45,7 @@
 		],
 		"typeProperties": {
 			"schema": "MOVIE_SCHEMA",
-			"table": "DIM_PERSONNEL"
+			"table": "FLATTEN_NAME_BASICS_STG"
 		}
 	}
 }
