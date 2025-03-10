@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "FlattenNameBasic",
+						"referenceName": "SnowflakeTableNAMEBASIC",
 						"type": "DatasetReference"
 					},
 					"name": "NameBasicsFlattenStg"
@@ -39,7 +39,9 @@
 				"          BIRTHYEAR as string,",
 				"          DEATHYEAR as string,",
 				"          PRIMARYPROFESSION as string,",
-				"          KNOWNFORTITLES as string",
+				"          KNOWNFORTITLES as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -53,7 +55,9 @@
 				"          BIRTHYEAR,",
 				"          DEATHYEAR,",
 				"          PRIMARYPROFESSION,",
-				"          KNOWNFORTITLES",
+				"          KNOWNFORTITLES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
@@ -64,7 +68,9 @@
 				"          BIRTHYEAR,",
 				"          DEATHYEAR,",
 				"          PRIMARYPROFESSION,",
-				"          KNOWNFORTITLES",
+				"          KNOWNFORTITLES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten2",
@@ -76,22 +82,16 @@
 				"          BIRTHYEAR as string,",
 				"          DEATHYEAR as string,",
 				"          PRIMARYPROFESSION as string,",
-				"          KNOWNFORTITLES as string",
+				"          KNOWNFORTITLES as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     stageInsert: true,",
-				"     mapColumn(",
-				"          NCONST,",
-				"          PRIMARYNAME,",
-				"          BIRTHYEAR,",
-				"          DEATHYEAR,",
-				"          PRIMARYPROFESSION,",
-				"          KNOWNFORTITLES",
-				"     )) ~> NameBasicsFlattenStg"
+				"     stageInsert: true) ~> NameBasicsFlattenStg"
 			]
 		}
 	}
