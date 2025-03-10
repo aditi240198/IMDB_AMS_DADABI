@@ -3,24 +3,8 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [
-				{
-					"dataset": {
-						"referenceName": "ds_TitleCrewStg",
-						"type": "DatasetReference"
-					},
-					"name": "dfTitleCrewStg"
-				}
-			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "snowflake_TitleCrewStg",
-						"type": "DatasetReference"
-					},
-					"name": "snowflakeTitleCrewStg"
-				}
-			],
+			"sources": [],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "derivedColumnDirectorsWriters"
@@ -33,15 +17,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          tconst as string,",
-				"          directors as string,",
-				"          writers as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> dfTitleCrewStg",
-				"dfTitleCrewStg derive(directors = split(directors,','),",
+				" derive(directors = split(directors,','),",
 				"          writers = split(writers,',')) ~> derivedColumnDirectorsWriters",
 				"derivedColumnDirectorsWriters foldDown(unroll(directors),",
 				"     mapColumn(",
@@ -58,27 +34,7 @@
 				"          writers",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flattenWriters",
-				"flattenWriters sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          TCONST as string,",
-				"          DIRECTORS as string,",
-				"          WRITERS as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true,",
-				"     mapColumn(",
-				"          TCONST = tconst,",
-				"          DIRECTORS = directors,",
-				"          WRITERS = writers",
-				"     )) ~> snowflakeTitleCrewStg"
+				"     skipDuplicateMapOutputs: false) ~> flattenWriters"
 			]
 		}
 	}
