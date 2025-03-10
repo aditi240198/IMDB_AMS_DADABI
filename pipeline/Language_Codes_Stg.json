@@ -5,8 +5,6 @@
 			{
 				"name": "LanguageCodesStg",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.00:30:00",
@@ -53,7 +51,7 @@
 							"referenceName": "blobams",
 							"type": "LinkedServiceReference"
 						},
-						"path": "silver"
+						"path": ""
 					},
 					"translator": {
 						"type": "TabularTranslator",
@@ -64,37 +62,17 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "ISO_LANGUAGE_NAME",
+									"name": "ISO_LANGUAGE_NAMES",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Set 1",
+									"name": "Language Codes",
 									"type": "String"
 								},
 								"sink": {
-									"name": "SET_1",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Set 2T",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SET_2T",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Set 2B",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SET_2B",
+									"name": "LANGUAGE_CODE",
 									"type": "String"
 								}
 							},
