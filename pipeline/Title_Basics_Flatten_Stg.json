@@ -5,6 +5,8 @@
 			{
 				"name": "Df_Title_Basics_Flatten",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.00:30:00",
