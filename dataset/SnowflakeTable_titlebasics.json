@@ -49,7 +49,7 @@
 		],
 		"typeProperties": {
 			"schema": "MOVIE_SCHEMA",
-			"table": "FLATTEN_TITLE_BASICS_STG"
+			"table": "STG_TITLE_BASICS"
 		}
 	}
 }
