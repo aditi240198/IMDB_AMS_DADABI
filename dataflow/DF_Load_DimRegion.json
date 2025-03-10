@@ -18,34 +18,33 @@
 						"referenceName": "sf_DimRegion",
 						"type": "DatasetReference"
 					},
-					"name": "sinkRegion"
+					"name": "sink1"
 				}
 			],
 			"transformations": [
 				{
-					"name": "select"
-				},
-				{
-					"name": "derivedColumn1"
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
 				"          COUNTRY_CODE as string,",
-				"          COUNTRY_NAME as string",
+				"          COUNTRY_NAME as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> sourceRegion",
-				"derivedColumn1 select(mapColumn(",
-				"          REGION_ID_SK = COUNTRY_CODE,",
-				"          REGION_NAME = COUNTRY_NAME",
+				"sourceRegion select(mapColumn(",
+				"          COUNTRY_CODE,",
+				"          COUNTRY_NAME,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select",
-				"sourceRegion derive({} = ERROR_FUNCTION(''),",
-				"          column2 = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"select sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          REGION_ID_SK as string,",
@@ -60,7 +59,13 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true) ~> sinkRegion"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          REGION_ID_SK = COUNTRY_CODE,",
+				"          REGION_NAME = COUNTRY_NAME,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     )) ~> sink1"
 			]
 		}
 	}
