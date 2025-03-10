@@ -91,7 +91,17 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
-				"     stageInsert: true) ~> NameBasicsFlattenStg"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          NCONST,",
+				"          PRIMARYNAME,",
+				"          BIRTHYEAR,",
+				"          DEATHYEAR,",
+				"          PRIMARYPROFESSION,",
+				"          KNOWNFORTITLES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     )) ~> NameBasicsFlattenStg"
 			]
 		}
 	}
