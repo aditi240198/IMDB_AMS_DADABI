@@ -19,6 +19,19 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "DI_LOAD_DT",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "DI_JOB_ID",
+								"value": "7"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
@@ -41,6 +54,71 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "silver"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "tconst",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TCONST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "parentTconst",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PARENTTCONST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "seasonNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SEASONNUMBER",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "episodeNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EPISDOENUMBER",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "DI_JOB_ID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DI_JOB_ID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "DI_LOAD_DT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DI_LOAD_DT",
+									"type": "DateTime"
+								}
+							}
+						]
 					}
 				},
 				"inputs": [
