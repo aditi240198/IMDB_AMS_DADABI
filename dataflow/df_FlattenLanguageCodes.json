@@ -1,0 +1,55 @@
+{
+	"name": "df_FlattenLanguageCodes",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sf_LanguageCodesStg",
+						"type": "DatasetReference"
+					},
+					"name": "dsLanguageCodes"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sinkLangCodesFlattened"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ISO_LANGUAGE_NAMES as string,",
+				"          LANGUAGE_CODE as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> dsLanguageCodes",
+				"dsLanguageCodes derive(LANGUAGE_CODE = split(LANGUAGE_CODE,',')) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unroll(LANGUAGE_CODE),",
+				"     mapColumn(",
+				"          ISO_LANGUAGE_NAMES,",
+				"          LANGUAGE_CODE,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkLangCodesFlattened"
+			]
+		}
+	}
+}
