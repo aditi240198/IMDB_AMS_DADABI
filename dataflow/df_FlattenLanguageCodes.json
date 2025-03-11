@@ -33,6 +33,12 @@
 				},
 				{
 					"name": "flatten2"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -56,7 +62,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten2 keyGenerate(output(Language_ID_SK as long),",
+				"aggregate1 keyGenerate(output(Language_ID_SK as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> SKLANGCODE",
 				"flatten1 foldDown(unroll(ISO_LANGUAGE_NAMES),",
@@ -68,7 +74,21 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten2",
-				"SKLANGCODE sink(allowSchemaDrift: true,",
+				"flatten2 aggregate(groupBy(LANGUAGE_CODE,",
+				"          ISO_LANGUAGE_NAMES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT),",
+				"     COUNT_ROW = count(LANGUAGE_CODE)) ~> aggregate1",
+				"SKLANGCODE select(mapColumn(",
+				"          LANGUAGE_CODE,",
+				"          ISO_LANGUAGE_NAMES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT,",
+				"          Language_ID_SK",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          LANGUAGE_ID_SK as decimal(38,0),",
@@ -83,14 +103,7 @@
 				"     upsertable:false,",
 				"     truncate:true,",
 				"     format: 'table',",
-				"     stageInsert: true,",
-				"     mapColumn(",
-				"          LANGUAGE_ID_SK = Language_ID_SK,",
-				"          ISO_LANGUAGE_NAMES,",
-				"          LANGUAGE_CODE,",
-				"          DI_JOB_ID,",
-				"          DI_LOAD_DT",
-				"     )) ~> sinkLangCodesFlattened"
+				"     stageInsert: true) ~> sinkLangCodesFlattened"
 			]
 		}
 	}
