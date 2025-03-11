@@ -13,13 +13,6 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "sf_DimRegion",
-						"type": "DatasetReference"
-					},
-					"name": "sourceDimRegion"
-				},
-				{
-					"dataset": {
 						"referenceName": "sf_DimLanguage",
 						"type": "DatasetReference"
 					},
@@ -31,6 +24,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sfTitleAkas"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimRegionSF",
+						"type": "DatasetReference"
+					},
+					"name": "sourceDimRegion"
 				}
 			],
 			"sinks": [
@@ -56,9 +56,6 @@
 					"name": "select2"
 				},
 				{
-					"name": "select3"
-				},
-				{
 					"name": "select4"
 				},
 				{
@@ -66,6 +63,15 @@
 				},
 				{
 					"name": "selectBridgeTitleAkas"
+				},
+				{
+					"name": "select5"
+				},
+				{
+					"name": "select6"
+				},
+				{
+					"name": "select7"
 				}
 			],
 			"scriptLines": [
@@ -85,15 +91,6 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> sourceDimTitle",
-				"source(output(",
-				"          REGION_ID_SK as string,",
-				"          REGION_NAME as string,",
-				"          DI_JOB_ID as decimal(38,0),",
-				"          DI_LOAD_DT as date",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     format: 'table') ~> sourceDimRegion",
 				"source(output(",
 				"          LANGUAGE_ID_SK as decimal(38,0),",
 				"          LANGUAGE_CODE as string,",
@@ -119,12 +116,22 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> sfTitleAkas",
+				"source(output(",
+				"          REGION_ID_SK as decimal(38,0),",
+				"          REGION_CODE as string,",
+				"          REGION_NAME as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> sourceDimRegion",
 				"select1, select2 join(TITLEID == MOVIE_TITLE_NUMBER,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join1, select3 join(REGION == REGION_NAME,",
+				"join1, sourceDimRegion join(REGION == REGION_CODE,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -132,30 +139,26 @@
 				"sfTitleAkas select(mapColumn(",
 				"          TITLEID,",
 				"          ORDERING,",
-				"          TITLE,",
 				"          REGION,",
 				"          LANGUAGE,",
-				"          ISORIGINALTITLE",
+				"          ISORIGINALTITLE,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> select1",
 				"sourceDimTitle select(mapColumn(",
 				"          TITLE_ID_SK,",
 				"          MOVIE_TITLE_NUMBER,",
-				"          ORIGINAL_TITLE",
+				"          ORIGINAL_TITLE,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> select2",
-				"sourceDimRegion select(mapColumn(",
-				"          REGION_ID_SK,",
-				"          REGION_NAME",
-				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> select3",
 				"sourceDimLanguage select(mapColumn(",
 				"          LANGUAGE_ID_SK,",
 				"          LANGUAGE_CODE,",
-				"          LANGUAGE_NAME,",
 				"          DI_JOB_ID,",
 				"          DI_LOAD_DT",
 				"     ),",
@@ -173,11 +176,17 @@
 				"          ORIGINAL_TITLE,",
 				"          REGION_ID_SK,",
 				"          LANGUAGE_ID_SK,",
-				"          DI_JOB_ID,",
-				"          DI_LOAD_DT",
+				"          DI_JOB_ID = select4@DI_JOB_ID,",
+				"          DI_LOAD_DT = select4@DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> selectBridgeTitleAkas",
+				"select6 select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select5",
+				"select7 select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select6",
+				"sourceDimRegion select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select7",
 				"selectBridgeTitleAkas sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
