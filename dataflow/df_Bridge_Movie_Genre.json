@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "df_Bridge_Movie_Genre",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -26,15 +26,7 @@
 					"name": "source3"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "BridgeGenre",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "select1"
@@ -140,27 +132,7 @@
 				"          DI_LOAD_DT",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> select4",
-				"select4 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          TITLE_ID_SK as decimal(38,0),",
-				"          GENRE_ID_SK as decimal(38,0),",
-				"          DI_LOAD_DT as date,",
-				"          DI_JOB_ID as decimal(38,0)",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     stageInsert: true,",
-				"     mapColumn(",
-				"          TITLE_ID_SK,",
-				"          GENRE_ID_SK,",
-				"          DI_LOAD_DT,",
-				"          DI_JOB_ID",
-				"     )) ~> sink1"
+				"     skipDuplicateMapOutputs: false) ~> select4"
 			]
 		}
 	}
