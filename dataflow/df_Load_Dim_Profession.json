@@ -39,7 +39,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     query: 'SELECT DISTINCT PRIMARYPROFESSION, NCONST FROM FLATTEN_NAME_BASICS_STG',",
+				"     query: 'SELECT PRIMARYPROFESSION, NCONST\\nFROM FLATTEN_NAME_BASICS_STG\\nQUALIFY ROW_NUMBER() OVER (PARTITION BY PRIMARYPROFESSION ORDER BY NCONST) = 1',",
 				"     format: 'query') ~> LoadDimProfession",
 				"LoadDimProfession keyGenerate(output(RowNum as long),",
 				"     startAt: 1L,",
