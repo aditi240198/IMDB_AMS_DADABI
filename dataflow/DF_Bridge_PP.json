@@ -131,7 +131,13 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     stageInsert: true) ~> ToTarget"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          PERSON_ID_SK,",
+				"          PROFESSION_ID_SK,",
+				"          DI_LOAD_DT,",
+				"          DI_JOB_ID",
+				"     )) ~> ToTarget"
 			]
 		}
 	}
