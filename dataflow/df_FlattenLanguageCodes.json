@@ -103,7 +103,14 @@
 				"     upsertable:false,",
 				"     truncate:true,",
 				"     format: 'table',",
-				"     stageInsert: true) ~> sinkLangCodesFlattened"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          LANGUAGE_ID_SK = Language_ID_SK,",
+				"          ISO_LANGUAGE_NAMES,",
+				"          LANGUAGE_CODE,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     )) ~> sinkLangCodesFlattened"
 			]
 		}
 	}
