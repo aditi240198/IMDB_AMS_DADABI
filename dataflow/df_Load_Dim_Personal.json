@@ -10,12 +10,26 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeDimPersonnel",
+						"type": "DatasetReference"
+					},
+					"name": "MaxPersonSK"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeLoadPersonnel",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeLoadPersonnel",
+						"referenceName": "SnowflakeTable2",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -30,6 +44,21 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "MaxPersonJoin"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -46,23 +75,72 @@
 				"     validateSchema: false,",
 				"     query: 'SELECT DISTINCT NCONST,PRIMARYNAME,BIRTHYEAR,DEATHYEAR FROM MOVIE_SCHEMA.FLATTEN_NAME_BASICS_STG',",
 				"     format: 'query') ~> source1",
-				"source1 select(mapColumn(",
-				"          NCONST,",
-				"          PRIMARYNAME,",
-				"          BIRTHYEAR,",
-				"          DEATHYEAR",
+				"source(output(",
+				"          MAXPERSONSK as decimal(38,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     query: 'SELECT NVL(MAX(Person_ID_SK),0) AS MaxPersonSK FROM MOVIE_SCHEMA.DIM_PERSONNEL',",
+				"     format: 'query') ~> MaxPersonSK",
+				"source(output(",
+				"          PERSON_ID_SK as decimal(38,0),",
+				"          PERSON_NCONST as string,",
+				"          PERSON_NAME as string,",
+				"          BIRTH_YEAR as string,",
+				"          DEATH_YEAR as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source2",
+				"MaxPersonJoin select(mapColumn(",
+				"          NCONST_SF = NCONST,",
+				"          PRIMARYNAME_SF = PRIMARYNAME,",
+				"          BIRTHYEAR_SF = BIRTHYEAR,",
+				"          DEATHYEAR_SF = DEATHYEAR,",
+				"          MAXPERSONSK_SF = MAXPERSONSK",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 keyGenerate(output(RowNum as long),",
+				"select2 keyGenerate(output(RowNum as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
 				"surrogateKey1 derive(DI_JOB_ID = $JOB_ID,",
-				"          DI_LOAD_DATE = currentDate()) ~> derivedColumn1",
+				"          DI_LOAD_DATE = currentDate(),",
+				"          person_Sk = MAXPERSONSK + RowNum) ~> derivedColumn1",
+				"source1, MaxPersonSK join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> MaxPersonJoin",
+				"select1 aggregate(groupBy(NCONST_SF,",
+				"          PRIMARYNAME_SF,",
+				"          BIRTHYEAR_SF,",
+				"          DEATHYEAR_SF,",
+				"          MAXPERSONSK_SF),",
+				"     COUNT_ROW = count(NCONST_SF)) ~> aggregate1",
+				"aggregate1, source2 join(NCONST_SF == PERSON_NCONST,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 filter(isNull(PERSON_NCONST)&&isNull(PERSON_NAME)&&isNull(BIRTH_YEAR)&&isNull(DEATH_YEAR)) ~> filter1",
+				"filter1 select(mapColumn(",
+				"          NCONST = NCONST_SF,",
+				"          PRIMARYNAME = PRIMARYNAME_SF,",
+				"          BIRTHYEAR = BIRTHYEAR_SF,",
+				"          DEATHYEAR = DEATHYEAR_SF,",
+				"          MAXPERSONSK = MAXPERSONSK_SF,",
+				"          COUNT_ROW",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          PERSON_ID_SK as string,",
+				"          PERSON_ID_SK as decimal(38,0),",
+				"          PERSON_NCONST as string,",
 				"          PERSON_NAME as string,",
 				"          BIRTH_YEAR as string,",
 				"          DEATH_YEAR as string,",
@@ -73,11 +151,13 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
 				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
 				"     stageInsert: true,",
 				"     mapColumn(",
-				"          PERSON_ID_SK = NCONST,",
+				"          PERSON_ID_SK = person_Sk,",
+				"          PERSON_NCONST = NCONST,",
 				"          PERSON_NAME = PRIMARYNAME,",
 				"          BIRTH_YEAR = BIRTHYEAR,",
 				"          DEATH_YEAR = DEATHYEAR,",
