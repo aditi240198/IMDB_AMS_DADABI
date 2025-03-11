@@ -1,0 +1,88 @@
+{
+	"name": "df_Load_Dim_Profession",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableNAMEBASIC",
+						"type": "DatasetReference"
+					},
+					"name": "LoadDimProfession"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeDimProfession",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "surrogateKey1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          NCONST as string,",
+				"          PRIMARYNAME as string,",
+				"          BIRTHYEAR as string,",
+				"          DEATHYEAR as string,",
+				"          PRIMARYPROFESSION as string,",
+				"          KNOWNFORTITLES as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> LoadDimProfession",
+				"LoadDimProfession select(mapColumn(",
+				"          NCONST,",
+				"          PRIMARYNAME,",
+				"          BIRTHYEAR,",
+				"          DEATHYEAR,",
+				"          PRIMARYPROFESSION,",
+				"          KNOWNFORTITLES,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 keyGenerate(output(RowNum as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          PROFESSION_ID_SK as decimal(38,0),",
+				"          PROFESSION_NCONST as string,",
+				"          PROFESSION_NAME as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          PROFESSION_ID_SK = RowNum,",
+				"          PROFESSION_NCONST = NCONST,",
+				"          PROFESSION_NAME = PRIMARYPROFESSION,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
