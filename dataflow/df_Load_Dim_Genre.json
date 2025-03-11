@@ -1,5 +1,5 @@
 {
-	"name": "df_Load_Dim_flatten_Genre",
+	"name": "df_Load_Dim_Genre",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

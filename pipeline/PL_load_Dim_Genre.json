@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_Load_Dim_flatten_Genre",
+						"referenceName": "df_Load_Dim_Genre",
 						"type": "DataFlowReference"
 					},
 					"compute": {
