@@ -1,5 +1,5 @@
 {
-	"name": "DF_Bridge_PP",
+	"name": "DF_Bridge_Person_Profession",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

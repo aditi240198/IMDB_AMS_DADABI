@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Person_Prof_Bridge",
 	"properties": {
 		"activities": [
 			{
@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_Bridge_PP",
+						"referenceName": "DF_Bridge_Person_Profession",
 						"type": "DataFlowReference",
 						"parameters": {
 							"job_ID": "\"70\""
