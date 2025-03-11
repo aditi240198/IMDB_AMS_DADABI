@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTableDimTitle",
+						"referenceName": "SF_DimTitle",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -23,13 +23,19 @@
 			],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "aggregate1"
 				},
 				{
 					"name": "surrogateKey1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     JOB_ID as string (\"59\")",
+				"}",
 				"source(output(",
 				"          TCONST as string,",
 				"          TITLETYPE as string,",
@@ -46,25 +52,21 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> source1",
-				"source1 select(mapColumn(",
-				"          TCONST,",
+				"source1 aggregate(groupBy(TCONST,",
 				"          TITLETYPE,",
 				"          PRIMARYTITLE,",
 				"          ORIGINALTITLE,",
 				"          ISADULT,",
 				"          STARTYEAR,",
 				"          ENDYEAR,",
-				"          RUNTIME_MINUTES,",
-				"          GENRES,",
-				"          DI_JOB_ID,",
-				"          DI_LOAD_DT",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 keyGenerate(output(RowNum as long),",
+				"          RUNTIME_MINUTES),",
+				"     COUNT_ROW = count(TCONST)) ~> aggregate1",
+				"aggregate1 keyGenerate(output(RowNum as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"surrogateKey1 derive(DI_JOB_ID = $JOB_ID,",
+				"          DI_LOAD_DT = currentDate()) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          TITLE_ID_SK as decimal(38,0),",
