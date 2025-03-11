@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
-				"type": "Copy",
+				"name": "dfDimLanguage",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.12:00:00",
+					"timeout": "0.00:30:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,87 +15,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "SnowflakeV2Source",
-						"exportSettings": {
-							"type": "SnowflakeExportCopyCommand"
-						}
+					"dataflow": {
+						"referenceName": "df_Load_DimLanguage",
+						"type": "DataFlowReference"
 					},
-					"sink": {
-						"type": "SnowflakeV2Sink",
-						"importSettings": {
-							"type": "SnowflakeImportCopyCommand"
-						}
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
-					"enableStaging": true,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "LANGUAGE_ID_SK",
-									"type": "Int64"
-								},
-								"sink": {
-									"name": "LANGUAGE_ID_SK",
-									"type": "Int64"
-								}
-							},
-							{
-								"source": {
-									"name": "LANGUAGE_CODE",
-									"type": "String"
-								},
-								"sink": {
-									"name": "LANGUAGE_CODE",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ISO_LANGUAGE_NAMES",
-									"type": "String"
-								},
-								"sink": {
-									"name": "LANGUAGE_NAME",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DI_JOB_ID",
-									"type": "Int64"
-								},
-								"sink": {
-									"name": "DI_JOB_ID",
-									"type": "Int64"
-								}
-							},
-							{
-								"source": {
-									"name": "DI_LOAD_DT",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "DI_LOAD_DT",
-									"type": "DateTime"
-								}
-							}
-						]
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "sf_FlattenedLangCodes",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "sf_DimLangCodes",
-						"type": "DatasetReference"
-					}
-				]
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
