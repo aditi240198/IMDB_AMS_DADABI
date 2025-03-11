@@ -6,31 +6,29 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "sf_RegionCodesStg",
+						"referenceName": "SFRegionCodesStg",
 						"type": "DatasetReference"
 					},
-					"name": "sourceRegion"
+					"name": "RegionCodesStg"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DimRegionSF",
+						"referenceName": "SFREGIONDIM",
 						"type": "DatasetReference"
 					},
-					"name": "sinkDimRegion"
+					"name": "sink1"
 				}
 			],
 			"transformations": [
 				{
 					"name": "select1"
-				},
-				{
-					"name": "surrogateRegionIDSK"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
+				"          COUNTRY_SK as decimal(38,0),",
 				"          COUNTRY_CODE as string,",
 				"          COUNTRY_NAME as string,",
 				"          DI_JOB_ID as decimal(38,0),",
@@ -38,8 +36,9 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     format: 'table') ~> sourceRegion",
-				"sourceRegion select(mapColumn(",
+				"     format: 'table') ~> RegionCodesStg",
+				"RegionCodesStg select(mapColumn(",
+				"          COUNTRY_SK,",
 				"          COUNTRY_CODE,",
 				"          COUNTRY_NAME,",
 				"          DI_JOB_ID,",
@@ -47,11 +46,15 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 keyGenerate(output(Region_ID_SK as long),",
-				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateRegionIDSK",
-				"surrogateRegionIDSK sink(allowSchemaDrift: true,",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          REGION_ID_SK as decimal(38,0),",
+				"          REGION_CODE as string,",
+				"          REGION_NAME as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
@@ -60,12 +63,12 @@
 				"     format: 'table',",
 				"     stageInsert: true,",
 				"     mapColumn(",
-				"          COUNTRY_CODE,",
-				"          COUNTRY_NAME,",
+				"          REGION_ID_SK = COUNTRY_SK,",
+				"          REGION_CODE = COUNTRY_CODE,",
+				"          REGION_NAME = COUNTRY_NAME,",
 				"          DI_JOB_ID,",
-				"          DI_LOAD_DT,",
-				"          Region_ID_SK",
-				"     )) ~> sinkDimRegion"
+				"          DI_LOAD_DT",
+				"     )) ~> sink1"
 			]
 		}
 	}
