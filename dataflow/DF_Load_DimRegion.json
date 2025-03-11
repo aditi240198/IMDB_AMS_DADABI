@@ -15,15 +15,18 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "sf_DimRegion",
+						"referenceName": "DimRegionSF",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sinkDimRegion"
 				}
 			],
 			"transformations": [
 				{
 					"name": "select1"
+				},
+				{
+					"name": "surrogateRegionIDSK"
 				}
 			],
 			"scriptLines": [
@@ -44,26 +47,25 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"select1 keyGenerate(output(Region_ID_SK as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateRegionIDSK",
+				"surrogateRegionIDSK sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          REGION_ID_SK as string,",
-				"          REGION_NAME as string,",
-				"          DI_JOB_ID as decimal(38,0),",
-				"          DI_LOAD_DT as date",
-				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
+				"     truncate:true,",
 				"     format: 'table',",
 				"     stageInsert: true,",
 				"     mapColumn(",
-				"          REGION_ID_SK = COUNTRY_CODE,",
-				"          REGION_NAME = COUNTRY_NAME,",
+				"          COUNTRY_CODE,",
+				"          COUNTRY_NAME,",
 				"          DI_JOB_ID,",
-				"          DI_LOAD_DT",
-				"     )) ~> sink1"
+				"          DI_LOAD_DT,",
+				"          Region_ID_SK",
+				"     )) ~> sinkDimRegion"
 			]
 		}
 	}
