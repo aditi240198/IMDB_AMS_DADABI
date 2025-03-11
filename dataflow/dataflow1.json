@@ -1,0 +1,167 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SF_FlattenTitleBasic",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "sfdimtitle",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimGenres",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "BridgeGenre",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select4"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     DI_JOB_ID as string (\"10\")",
+				"}",
+				"source(output(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as string,",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIME_MINUTES as string,",
+				"          GENRES as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          TITLE_ID_SK as decimal(38,0),",
+				"          MOVIE_TITLE_NUMBER as string,",
+				"          PRIMARY_TITLE as string,",
+				"          ORIGINAL_TITLE as string,",
+				"          TITLE_TYPE as string,",
+				"          IS_ADULT as decimal(38,0),",
+				"          RELEASE_YEAR as string,",
+				"          END_YEAR as string,",
+				"          RUNTIME_MINUTES as decimal(38,0),",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          GENRE_ID_SK as decimal(38,0),",
+				"          GENRE_NAME as string,",
+				"          DI_JOB_ID as decimal(38,0),",
+				"          DI_LOAD_DT as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source3",
+				"source1 select(mapColumn(",
+				"          TCONST,",
+				"          GENRES",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select1",
+				"source2 select(mapColumn(",
+				"          TITLE_ID_SK,",
+				"          MOVIE_TITLE_NUMBER",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select2",
+				"source3 select(mapColumn(",
+				"          GENRE_ID_SK,",
+				"          GENRE_NAME",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select3",
+				"select1, select2 join(TCONST == MOVIE_TITLE_NUMBER,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1, select3 join(GENRES == GENRE_NAME,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 derive(DI_JOB_ID = $DI_JOB_ID,",
+				"          DI_LOAD_DT = currentDate()) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          TITLE_ID_SK,",
+				"          GENRE_ID_SK,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> select4",
+				"select4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TITLE_ID_SK as decimal(38,0),",
+				"          GENRE_ID_SK as decimal(38,0),",
+				"          DI_LOAD_DT as date,",
+				"          DI_JOB_ID as decimal(38,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TITLE_ID_SK,",
+				"          GENRE_ID_SK,",
+				"          DI_LOAD_DT,",
+				"          DI_JOB_ID",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
