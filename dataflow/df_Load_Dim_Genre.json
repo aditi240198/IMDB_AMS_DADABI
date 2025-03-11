@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_DIM_GENRE",
+						"referenceName": "GenreDim",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
