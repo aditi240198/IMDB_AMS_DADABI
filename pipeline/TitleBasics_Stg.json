@@ -5,8 +5,6 @@
 			{
 				"name": "StgTitleBasics",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.00:30:00",
@@ -179,7 +177,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SnowflakeTable_titlebasics",
+						"referenceName": "SnowflakeTable3",
 						"type": "DatasetReference"
 					}
 				]
