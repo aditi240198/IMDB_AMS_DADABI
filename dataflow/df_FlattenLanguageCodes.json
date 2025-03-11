@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "SKLANGCODE"
+				},
+				{
+					"name": "flatten2"
 				}
 			],
 			"scriptLines": [
@@ -42,7 +45,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'table') ~> dsLanguageCodes",
-				"dsLanguageCodes derive(LANGUAGE_CODE = split(LANGUAGE_CODE,',')) ~> derivedColumn1",
+				"dsLanguageCodes derive(LANGUAGE_CODE = split(LANGUAGE_CODE,','),",
+				"          ISO_LANGUAGE_NAMES = split(ISO_LANGUAGE_NAMES,',')) ~> derivedColumn1",
 				"derivedColumn1 foldDown(unroll(LANGUAGE_CODE),",
 				"     mapColumn(",
 				"          ISO_LANGUAGE_NAMES,",
@@ -52,9 +56,18 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 keyGenerate(output(Language_ID_SK as long),",
+				"flatten2 keyGenerate(output(Language_ID_SK as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> SKLANGCODE",
+				"flatten1 foldDown(unroll(ISO_LANGUAGE_NAMES),",
+				"     mapColumn(",
+				"          ISO_LANGUAGE_NAMES,",
+				"          LANGUAGE_CODE,",
+				"          DI_JOB_ID,",
+				"          DI_LOAD_DT",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
 				"SKLANGCODE sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
