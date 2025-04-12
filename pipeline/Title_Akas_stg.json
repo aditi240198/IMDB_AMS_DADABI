@@ -1,9 +1,9 @@
 {
-	"name": "Title_Ratings_stg",
+	"name": "Title_Akas_stg",
 	"properties": {
 		"activities": [
 			{
-				"name": "TitleRatingsStg",
+				"name": "TitleAkasStg",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -25,7 +25,7 @@
 								"value": "7"
 							},
 							{
-								"name": "DI_LOAD_DT",
+								"name": "DI_LOAD_DATE",
 								"value": {
 									"value": "@utcNow()",
 									"type": "Expression"
@@ -52,38 +52,89 @@
 						"linkedServiceName": {
 							"referenceName": "blobstorageams",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"path": "silver"
 					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"name": "tconst",
+									"name": "titleId",
 									"type": "String"
 								},
 								"sink": {
-									"name": "TCONST",
+									"name": "TITLEID",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "averageRating",
+									"name": "ordering",
 									"type": "String"
 								},
 								"sink": {
-									"name": "AVERAGERATING",
-									"type": "Double"
+									"name": "ORDERING",
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
-									"name": "numVotes",
+									"name": "title",
 									"type": "String"
 								},
 								"sink": {
-									"name": "NUMVOTES",
+									"name": "TITLE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "region",
+									"type": "String"
+								},
+								"sink": {
+									"name": "REGION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "language",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LANGUAGE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "types",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TYPES",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "attributes",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ATTRIBUTES",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "isOriginalTitle",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ISORIGINALTITLE",
 									"type": "Int64"
 								}
 							},
@@ -99,7 +150,7 @@
 							},
 							{
 								"source": {
-									"name": "DI_LOAD_DT",
+									"name": "DI_LOAD_DATE",
 									"type": "String"
 								},
 								"sink": {
@@ -112,20 +163,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText4",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SnowflakeTable5",
+						"referenceName": "SnowflakeTable1",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2025-03-09T00:50:23Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }

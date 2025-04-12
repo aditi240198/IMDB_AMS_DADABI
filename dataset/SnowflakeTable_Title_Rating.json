@@ -1,5 +1,5 @@
 {
-	"name": "snowflake_titleratings",
+	"name": "SnowflakeTable_Title_Rating",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "db_ams_imdb",
@@ -14,15 +14,30 @@
 			},
 			{
 				"name": "AVERAGERATING",
-				"type": "FLOAT"
+				"type": "FLOAT",
+				"precision": 38,
+				"scale": 0
 			},
 			{
 				"name": "NUMVOTES",
 				"type": "NUMBER",
 				"precision": 38,
 				"scale": 0
+			},
+			{
+				"name": "DI_JOB_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "DI_LOAD_DT",
+				"type": "DATE"
 			}
-		]
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+		],
+		"typeProperties": {
+			"schema": "MOVIE_SCHEMA",
+			"table": "STG_TITLE_RATINGS"
+		}
+	}
 }

@@ -1,9 +1,9 @@
 {
-	"name": "Title_Ratings_stg",
+	"name": "Title_Principal_stg",
 	"properties": {
 		"activities": [
 			{
-				"name": "TitleRatingsStg",
+				"name": "TitlePrincipalStg",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -52,11 +52,22 @@
 						"linkedServiceName": {
 							"referenceName": "blobstorageams",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"path": "silver"
 					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
+							{
+								"source": {
+									"name": "RecordID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RECORDID",
+									"type": "Int64"
+								}
+							},
 							{
 								"source": {
 									"name": "tconst",
@@ -69,22 +80,52 @@
 							},
 							{
 								"source": {
-									"name": "averageRating",
+									"name": "ordering",
 									"type": "String"
 								},
 								"sink": {
-									"name": "AVERAGERATING",
-									"type": "Double"
+									"name": "ORDERING",
+									"type": "Int64"
 								}
 							},
 							{
 								"source": {
-									"name": "numVotes",
+									"name": "nconst",
 									"type": "String"
 								},
 								"sink": {
-									"name": "NUMVOTES",
-									"type": "Int64"
+									"name": "NCONST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "category",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CATEGORY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "job",
+									"type": "String"
+								},
+								"sink": {
+									"name": "JOB",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "characters\r",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CHARACTERS",
+									"type": "String"
 								}
 							},
 							{
@@ -112,20 +153,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText4",
+						"referenceName": "DelimitedText3",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SnowflakeTable5",
+						"referenceName": "Princ_SnowflakeTable",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2025-03-09T00:50:23Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
